@@ -1,4 +1,4 @@
-import sys, json, requests
+import sys, json, requests, os
 from flask import Flask, request
 import pyowm
 import urllib
@@ -16,14 +16,13 @@ except ImportError:
 
 app = Flask(__name__)
 
-PAT = 'EAAW6tn8Tto8BAChuXkv1YBSPjja66pPza6qw6mH9xIsTVHCi8aPSGtXMjOjNZBzV0ZB5zyy7GsTggSyFGbsdLriOYSEZCsrILjF67ESqwhWeaSZAwIpX4l25yjhoxYi2iPZATMLZA4oh9elezmZAwo0TbPpAcjj1ZA4tihyaWwRR15JUHzMDfOVO'
-CLIENT_ACCESS_TOKEN = '3daaf43baac741fd8dc89c12c024165f'
-
-VERIFY_TOKEN = 'coconut_pepper'
+PAT = os.environ['PAT'] 
+CLIENT_ACCESS_TOKEN = os.environ['CLIENT_ACCESS_TOKEN']
+VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
-@app.route('/', methods=['GET'])
+@app.route('/peppertalk', methods=['GET'])
 def handle_verification():
     '''
     Verifies facebook webhook subscription
@@ -188,6 +187,7 @@ def send_message(sender_id, message_text):
         "recipient": {"id": sender_id},
         "message": {"text": message_text}
     }))
+    print(r.__dict__)
 
 
 def send_message_response(sender_id, message_text):
@@ -200,7 +200,7 @@ def send_message_response(sender_id, message_text):
 
 
 
-@app.route('/', methods=['POST'])
+@app.route('/peppertalk', methods=['POST'])
 def handle_message():
     '''
     Handle messages sent by facebook messenger to the applicaiton
