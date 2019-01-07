@@ -6,7 +6,7 @@ url = "https://pypi.org/simple"
 [dev-packages]
 
 [requires]
-python_version = "3.5"
+python_version = "3.7"
 
 [packages]
 flask = "*"
