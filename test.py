@@ -1,5 +1,5 @@
 import sys, json, requests, os
-from flask import Flask, request
+from flask import Flask, request, render_template
 import pyowm
 import urllib
 from urllib import request as urlrequest
@@ -16,7 +16,7 @@ except ImportError:
 
 app = Flask(__name__)
 
-PAT = os.environ['PAT'] 
+PAT = os.environ['PAT']
 CLIENT_ACCESS_TOKEN = os.environ['CLIENT_ACCESS_TOKEN']
 VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 
@@ -28,13 +28,19 @@ def handle_verification():
     Verifies facebook webhook subscription
     Successful when verify_token is same as token sent by facebook app
     '''
-    if (request.args.get('hub.verify_token', '') == VERIFY_TOKEN):     
+    if (request.args.get('hub.verify_token', '') == VERIFY_TOKEN):
         print("succefully verified")
         return request.args.get('hub.challenge', '')
     else:
         print("Wrong verification token!")
         return "Wrong verification token"
 
+
+@app.route('/preview', methods=['GET'])
+def preview_test():
+    q = request.args.get('query')
+    print(q)
+    return render_template('preview.html', query=q)
 
 def respond_weather(input_city):
     #Using open weather map client to fetch the weather report
@@ -48,10 +54,10 @@ def respond_weather(input_city):
 
     observation = owm.weather_at_place(input_city)
     w = observation.get_weather()
-    print(w)                      
-    print(w.get_wind())                 
-    print(w.get_humidity())      
-    max_temp = str(w.get_temperature('celsius')['temp_max'])  
+    print(w)
+    print(w.get_wind())
+    print(w.get_humidity())
+    max_temp = str(w.get_temperature('celsius')['temp_max'])
     min_temp = str(w.get_temperature('celsius')['temp_min'])
     current_temp = str(w.get_temperature('celsius')['temp'])
     wind_speed = str(w.get_wind()['speed'])
@@ -84,7 +90,7 @@ def request_synonyms(user_text):
     user_text = user_text.lower()
     if 'words' in user_text and 'similar to' in user_text:
         return True
-        
+
 
 def respond_synonyms(user_text, output_count = 3):
     input_list = user_text.split()
@@ -130,7 +136,7 @@ def parse_user_message(user_text):
     The bot response is appened with weaher data fetched from
     open weather map client
     '''
-    
+
     if request_quote(user_text):
         response = respond_quote()
         return response
@@ -181,7 +187,7 @@ def send_message(sender_id, message_text):
 
         params={"access_token": PAT},
 
-        headers={"Content-Type": "application/json"}, 
+        headers={"Content-Type": "application/json"},
 
         data=json.dumps({
         "recipient": {"id": sender_id},
@@ -194,7 +200,7 @@ def send_message_response(sender_id, message_text):
 
     sentenceDelimiter = ". "
     messages = message_text.split(sentenceDelimiter)
-    
+
     for message in messages:
         send_message(sender_id, message)
 
@@ -210,13 +216,13 @@ def handle_message():
     if data["object"] == "page":
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
-                if messaging_event.get("message"):  
+                if messaging_event.get("message"):
 
-                    sender_id = messaging_event["sender"]["id"]        
-                    recipient_id = messaging_event["recipient"]["id"]  
+                    sender_id = messaging_event["sender"]["id"]
+                    recipient_id = messaging_event["recipient"]["id"]
                     try:
-                        message_text = messaging_event["message"]["text"]  
-                        send_message_response(sender_id, parse_user_message(message_text)) 
+                        message_text = messaging_event["message"]["text"]
+                        send_message_response(sender_id, parse_user_message(message_text))
                     except:
                         send_message(sender_id, message_text = '🌶️')
 
