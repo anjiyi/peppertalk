@@ -1,29 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Query</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+{% extends 'base.html' %}
 
-</head>
-<body>
-
-<div class="container">
-  <h2>Query</h2>
-  <form>
-    <div class="form-group">
-      <label for="query">query</label>
-      <input type="text" class="form-control" placeholder={{query}} name="query">
-      <button type="submit" class="btn btn-default" id="submitBtn">Submit</button>
-			<div>
-				{{answer}}
-			</div>
-    </div>
-  </form>
-</div>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-</body>
-</html>
-
+{% block content %}
+	<div class="row">
+		<div class="col-lg-4">
+			<form>
+				<div class="form-group">
+					<label for="query">Query</label>
+					<input 
+					  autofocus
+						type="text" 
+						class="form-control" 
+						value="{{query}}" 
+						name="query"
+						autocomplete="off">
+					<small class="form-text text-muted"> 
+						Press Enter to Ask the pepper a question.
+					</small>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				<div class="card answer">
+					<div class="card-header">
+						Answer
+					</div>
+					<div class="card-body">
+						<blockquote class="blockquote mb-0">
+							<p>{{answer}}</p>
+						</blockquote>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

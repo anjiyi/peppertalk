@@ -39,8 +39,32 @@ def handle_verification():
 
 @app.route("/preview", methods=["GET"])
 def preview_test():
-    q = request.args.get("query")
+    q = request.args.get("query") or ""
     return render_template("preview.html", query=q, answer=parse_user_message(q))
+
+
+@app.route("/test", methods=["GET"])
+def test_suite():
+    test_cases = [
+        "Give me something spicy", 
+        "California weather",
+        "meaning of pepper",
+        "Hello", 
+        "Are you a pepper?", 
+        "Pepperoni",
+        "Do me a Big\n favor",
+        "[1231231:12312]",
+        '\N{grinning face with smiling eyes}'
+    ]
+    responses = [
+        {
+            "query": t,
+            "answer": parse_user_message(t),
+            "view": {"class": "odd" if index % 2 else "even"},
+        }
+        for index, t in enumerate(test_cases)
+    ]
+    return render_template("test_suite.html", responses=responses)
 
 
 def respond_weather(input_city):

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% macro render_test_preview(response) -%}
+	<div class="col-lg-4 {{response.view.class}}-test">
+		<h3>Message</h3>
+		<p>{{response.query}}</p>
+		<h3>Reply</h3>
+		<p>{{response.answer}}</p>
+	</div>
+{%- endmacro %}
+
+
+{% block content %}
+	<div class="row">
+		{%- for response in responses %}
+			{{render_test_preview(response)}}
+		{%- endfor %}
+	</div>
+{% endblock %}
+
