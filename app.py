@@ -16,8 +16,10 @@ def handle_verification():
 
 @app.route("/preview", methods=["GET"])
 def preview_test():
-    q = request.args.get("query") or ""
-    return render_template("preview.html", query=q, answer=parse_user_message(q))
+    message = request.args.get("message") or ""
+    return render_template(
+        "preview.html", message=message, reply=parse_user_message(message)
+    )
 
 
 @app.route("/test", methods=["GET"])
@@ -35,8 +37,8 @@ def test_suite():
     ]
     responses = [
         {
-            "query": t,
-            "answer": parse_user_message(t),
+            "message": t,
+            "reply": parse_user_message(t),
             "view": {"class": "odd" if index % 2 else "even"},
         }
         for index, t in enumerate(test_cases)

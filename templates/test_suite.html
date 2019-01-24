@@ -3,9 +3,9 @@
 {% macro render_test_preview(response) -%}
 	<div class="col-lg-4 {{response.view.class}}-test">
 		<h3>Message</h3>
-		<p>{{response.query}}</p>
+		<p>{{response.message}}</p>
 		<h3>Reply</h3>
-		<p>{{response.answer}}</p>
+		<p>{{response.reply}}</p>
 	</div>
 {%- endmacro %}
 
