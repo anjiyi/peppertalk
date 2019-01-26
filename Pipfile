@@ -13,3 +13,6 @@ flask = "*"
 requests = "*"
 pyowm = "*"
 apiai = "*"
+
+[scripts]
+dev = "source ./env && pipenv run flask run"
