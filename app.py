@@ -51,6 +51,7 @@ def handle_message():
     """
     Handle messages sent by facebook messenger to the applicaiton
     """
+    messages = messenger_parser.get_messages(data)
     data = request.get_json()
 
     if data["object"] == "page":
