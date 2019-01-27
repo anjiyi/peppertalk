@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 from peppertalk import send_message, send_message_response, parse_user_message
 from lib import facebook_verification
+from lib.messenger_parser import MessengerRequestParser
 
 app = Flask(__name__)
 
@@ -51,24 +52,15 @@ def handle_message():
     """
     Handle messages sent by facebook messenger to the applicaiton
     """
-    messages = messenger_parser.get_messages(data)
-    data = request.get_json()
-
-    if data["object"] == "page":
-        for entry in data["entry"]:
-            for messaging_event in entry["messaging"]:
-                if messaging_event.get("message"):
-
-                    sender_id = messaging_event["sender"]["id"]
-                    recipient_id = messaging_event["recipient"]["id"]
-                    try:
-                        message_text = messaging_event["message"]["text"]
-                        send_message_response(
-                            sender_id, parse_user_message(message_text)
-                        )
-                    except:
-                        send_message(sender_id, message_text="🌶️")
-
+    messenger_parser = MessengerRequestParser()
+    message = messenger_parser.get_message(request.get_json())
+    if message == None:
+        send_message(sender_id, message_text="🌶️")
+        return
+    try:
+        send_message_response(message.sender_id, parse_user_message(message.text))
+    except:
+        send_message(message.sender_id, message_text="🌶️")
     return "ok"
 
 
