@@ -6,9 +6,10 @@ import random
 import sys, requests, os
 import urllib
 
-CLIENT_ACCESS_TOKEN = os.environ["CLIENT_ACCESS_TOKEN"]
-ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
-PAT = os.environ["PAT"]
+
+def get_ai():
+    CLIENT_ACCESS_TOKEN = os.environ["CLIENT_ACCESS_TOKEN"]
+    return apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
 
 def parse_user_message(user_text):
@@ -18,12 +19,7 @@ def parse_user_message(user_text):
     The bot response is appened with weaher data fetched from
     open weather map client
     """
-
-    if request_quote(user_text):
-        response = respond_quote()
-        return response
-
-    elif request_synonyms(user_text):
+    if request_synonyms(user_text):
         try:
             max_words = [int(n) for n in user_text.split() if n.isdigit()][0]
         except:
@@ -39,7 +35,7 @@ def parse_user_message(user_text):
 
     else:
 
-        request = ai.text_request()
+        request = get_ai().text_request()
         request.query = user_text
 
         response = json.loads(request.getresponse().read().decode("utf-8"))
@@ -58,30 +54,6 @@ def parse_user_message(user_text):
 
         else:
             return "Sorry, I couldn't understand that question"
-
-
-def send_message_response(sender_id, message_text):
-
-    sentenceDelimiter = ". "
-    messages = message_text.split(sentenceDelimiter)
-
-    for message in messages:
-        send_message(sender_id, message)
-
-
-def send_message(sender_id, message_text):
-    """
-    Sending response back to the user using facebook graph API
-    """
-    r = requests.post(
-        "https://graph.facebook.com/v2.6/me/messages",
-        params={"access_token": PAT},
-        headers={"Content-Type": "application/json"},
-        data=json.dumps(
-            {"recipient": {"id": sender_id}, "message": {"text": message_text}}
-        ),
-    )
-    print(r.__dict__)
 
 
 def respond_meaning(user_text):
@@ -128,30 +100,10 @@ def request_meaning(user_text):
         return True
 
 
-def respond_quote():
-    with open("quotes.json", encoding="utf-8") as f:
-        quotes = json.load(f)["quotes"]
-
-    quote = random.choice(quotes)
-    print("Quote responded:", quote["quote"] + " --" + quote["author"])
-    return quote["quote"] + " --" + quote["author"]
-
-
 def request_synonyms(user_text):
     user_text = user_text.lower()
     if "words" in user_text and "similar to" in user_text:
         return True
-
-
-def request_quote(user_text):
-    user_text = user_text.lower()
-    request_key_words = ["quote", "give me something spicy", "more spicy", "yes please"]
-    for w in request_key_words:
-        if w in user_text:
-            return True
-            print("Quote requested")
-            break
-    return False
 
 
 def respond_weather(input_city):

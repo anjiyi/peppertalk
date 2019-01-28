@@ -1,5 +1,6 @@
 from unittest import TestCase
-from lib.messenger_parser import MessengerRequestParser, Message
+from lib.messenger_parser import MessengerRequestParser
+from lib.message import Message
 
 
 class TestMessengerParser(TestCase):
@@ -65,7 +66,11 @@ class TestMessengerParser(TestCase):
                 }
             ],
         }
-        self.assertEqual(parser.get_message(json), None)
+        message = Message(
+            sender_id="<PSID>", recipient_id="<PAGE_ID>", message_type="text", text=""
+        )
+
+        self.assertEqual(parser.get_message(json), message)
 
     def test_message_with_fallback_attachment(self):
         parser = MessengerRequestParser()
@@ -97,4 +102,11 @@ class TestMessengerParser(TestCase):
                 }
             ],
         }
-        self.assertEqual(parser.get_message(json), None)
+        message = Message(
+            sender_id="<PSID>",
+            recipient_id="<PAGE_ID>",
+            message_type="text",
+            text="<URL_SENT_BY_THE_USER>",
+        )
+
+        self.assertEqual(parser.get_message(json), message)
