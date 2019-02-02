@@ -39,7 +39,7 @@ class ImageWithTitleReply(Reply):
             "attachment": {
                 "type": "template",
                 "payload": {
-                    "template_type": "list",
+                    "template_type": "generic",
                     "elements": [
                         {
                             "title": self.title,
