@@ -1,4 +1,4 @@
-import json
+import json, sys
 from flask import Flask, request, render_template
 from lib import facebook_verification
 from lib.messenger_parser import MessengerRequestParser
