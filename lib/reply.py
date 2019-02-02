@@ -38,12 +38,15 @@ class ImageWithTitleReply(Reply):
         return {
             "attachment": {
                 "type": "template",
-                "elements": [
-                    {
-                        "title": self.title,
-                        "subtitle": self.subtitle,
-                        "image_url": self.image_url,
-                    }
-                ],
+                "payload": {
+                    "template_type": "list",
+                    "elements": [
+                        {
+                            "title": self.title,
+                            "subtitle": self.subtitle,
+                            "image_url": self.image_url,
+                        }
+                    ],
+                },
             }
         }
