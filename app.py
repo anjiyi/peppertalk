@@ -87,5 +87,9 @@ def handle_message():
     return "ok"
 
 
+def get_test_client():
+    return app.test_client()
+
+
 if __name__ == "__main__":
     app.run()

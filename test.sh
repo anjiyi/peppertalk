@@ -1,1 +1,1 @@
-pipenv run python -m unittest discover
+source ./env && pipenv run python -m unittest discover
