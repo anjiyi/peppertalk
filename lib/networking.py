@@ -1,9 +1,9 @@
 def send_replies(replies):
     for r in replies:
-        send_reply(r.sender_id, r.text)
+        send_reply(r)
 
 
-def send_reply(sender_id, message_text):
+def send_reply(reply):
     """
     Sending response back to the user using facebook graph API
     """
@@ -12,6 +12,6 @@ def send_reply(sender_id, message_text):
         params={"access_token": PAT},
         headers={"Content-Type": "application/json"},
         data=json.dumps(
-            {"recipient": {"id": sender_id}, "message": {"text": message_text}}
+            {"recipient": {"id": reply.sender_id}, "message": reply.build_message()}
         ),
     )

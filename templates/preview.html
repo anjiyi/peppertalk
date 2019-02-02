@@ -5,7 +5,9 @@
 		<div class="col-lg-4">
 			<form>
 				<div class="form-group">
-					<label for="Message">Message</label>
+					<blockquote class="blockquote mb-0">
+						<label for="Message">Message</label>
+					</blockquote>
 					<input 
 					  autofocus
 						type="text" 
@@ -18,17 +20,25 @@
 					</small>
 				</div>
 				<button type="submit" class="btn btn-primary">Submit</button>
-				<div class="card answer">
-					<div class="card-header">
-						Answer
-					</div>
-					<div class="card-body">
-						<blockquote class="blockquote mb-0">
-							<p>{{reply}}</p>
-						</blockquote>
-					</div>
-				</div>
 			</form>
+			<div class="card answer">
+				<div class="card-header">
+					Reply
+				</div>
+				<div class="card-body">
+					<p>{{reply}}</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<div class="card answer">
+				<div class="card-header">
+					JSON
+				</div>
+				<div class="card-body">
+					<pre>{{json}}</pre>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

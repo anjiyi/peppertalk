@@ -1,7 +1,8 @@
 import random
 import json
-from lib.reply import Reply
+from lib.reply import TextOnlyReply
 from lib.specialists.base import PepperSpecialist
+
 
 class QuoteSpecialist(PepperSpecialist):
     """
@@ -29,7 +30,4 @@ class QuoteSpecialist(PepperSpecialist):
         return quote["quote"] + " --" + quote["author"]
 
     def reply(self, message):
-        return [Reply(sender_id=message.sender_id, text=self.get_quote())]
-
-
-
+        return [TextOnlyReply(sender_id=message.sender_id, text=self.get_quote())]

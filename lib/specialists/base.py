@@ -1,5 +1,6 @@
 from peppertalk import parse_user_message
-from lib.reply import Reply
+from lib.reply import TextOnlyReply
+
 
 class PepperSpecialist:
     def understands(self, message):
@@ -18,7 +19,7 @@ class PepperSpecialist:
 
 
 def pepper(sender_id):
-    return Reply(sender_id, "🌶️")
+    return TextOnlyReply(sender_id, "🌶️")
 
 
 class NoneMessageSpecialist(PepperSpecialist):
@@ -56,6 +57,7 @@ class EmptyMessageSpecialist(PepperSpecialist):
     def reply(self, message):
         return [pepper(message.sender_id)]
 
+
 class DeprecatedSpecialist(PepperSpecialist):
     """
     Follow the old logic to reply a message
@@ -68,6 +70,6 @@ class DeprecatedSpecialist(PepperSpecialist):
         deprecated = parse_user_message(message.text)
         sentenceDelimiter = ". "
         return [
-            Reply(message.sender_id, reply)
+            TextOnlyReply(message.sender_id, reply)
             for reply in deprecated.split(sentenceDelimiter)
         ]

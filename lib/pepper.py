@@ -1,6 +1,7 @@
 from lib.specialists.base import *
 from lib.reply import Reply
 from lib.specialists.quotes import QuoteSpecialist
+from lib.specialists.wordsbyanji import WordsByAnjiSpecialist
 
 
 class Pepper:
@@ -12,6 +13,7 @@ class Pepper:
             NoneMessageSpecialist(),
             EmptyMessageSpecialist(),
             QuoteSpecialist(),
+            WordsByAnjiSpecialist(),
             DeprecatedSpecialist(),
             ReturnPepperSpecialist(),
         ]
