@@ -74,12 +74,15 @@ def handle_message():
     """
     Handle messages sent by facebook messenger to the applicaiton
     """
+    debug = request.args.get("debug")
     messenger_parser = MessengerRequestParser()
     message = messenger_parser.get_message(request.get_json())
     try:
         replies = Pepper().reply(message)
         send_replies(replies)
     except:
+        if debug:
+            raise sys.exc_info()[1]
         print(sys.exc_info())
     return "ok"
 
