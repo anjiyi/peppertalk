@@ -80,7 +80,7 @@ def handle_message():
         replies = Pepper().reply(message)
         send_replies(replies)
     except:
-        print(sys.exec_info())
+        print(sys.exc_info())
     return "ok"
 
 
