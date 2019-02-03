@@ -91,6 +91,6 @@ class ImageListReply(Reply):
         return {
             "attachment": {
                 "type": "template",
-                "payload": {"template_type": "generic", "elements": elements},
+                "payload": {"template_type": "list", "elements": elements},
             }
         }
