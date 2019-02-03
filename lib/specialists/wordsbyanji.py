@@ -1,7 +1,7 @@
 import json, random, requests
 from html.parser import HTMLParser
 from lib.specialists.base import PepperSpecialist
-from lib.reply import ImageWithTitleReply
+from lib.reply import ImageWithTitleReply, ImageListReply, ImageListElement
 
 
 def is_preloaded(attrs):
@@ -38,6 +38,15 @@ def get_quotes():
     return parser.get_quotes()
 
 
+def get_placeholder_reply(sender_id):
+    return ImageWithTitleReply(
+        sender_id=sender_id,
+        image_url="https://andreq.me/words-by-anji/piyomaru.png",
+        title="Words from Anji",
+        subtitle="Wise as a pepper",
+    )
+
+
 class WordsByAnjiSpecialist(PepperSpecialist):
     """
     Replies with a quote from Anji, the wise pepper
@@ -51,14 +60,7 @@ class WordsByAnjiSpecialist(PepperSpecialist):
     def reply(self, message):
         quotes = get_quotes()
         if not quotes:
-            return [
-                ImageWithTitleReply(
-                    sender_id=message.sender_id,
-                    image_url="https://andreq.me/words-by-anji/piyomaru.png",
-                    title="Words from Anji",
-                    subtitle="Wise as a pepper",
-                )
-            ]
+            return [get_placeholder_reply(message.sender_id)]
         q = random.choice(quotes)
         return [
             ImageWithTitleReply(
@@ -66,5 +68,39 @@ class WordsByAnjiSpecialist(PepperSpecialist):
                 image_url="https://andreq.me/words-by-anji/piyomaru.png",
                 title=q["data"]["context"],
                 subtitle=q["data"]["word"],
+            )
+        ]
+
+
+class PepperEnglishSpecialist(PepperSpecialist):
+    """
+    Replies with a quote from Anji, the wise pepper
+    """
+
+    def understands(self, message):
+        intents = ["teach me a word"]
+        lowercase = message.text.lower()
+        return any([lowercase.find(i) >= 0 for i in intents])
+
+    def reply(self, message):
+        quotes = get_quotes()
+        if not quotes:
+            return [get_placeholder_reply(message.sender_id)]
+        q = random.choice(quotes)
+        return [
+            ImageListReply(
+                sender_id=message.sender_id,
+                header=ImageListElement(
+                    image_url="https://andreq.me/words-by-anji/piyomaru.png",
+                    title=q["data"]["word"],
+                    subtitle=q["data"]["definition"],
+                ),
+                children=[
+                    ImageListElement(
+                        image_url="https://andreq.me/words-by-anji/anjicon.ico",
+                        title=q["data"]["context"],
+                        subtitle=q["data"]["spelling"],
+                    )
+                ],
             )
         ]
