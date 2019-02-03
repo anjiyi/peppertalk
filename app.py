@@ -23,7 +23,8 @@ def test_message(text):
 
 
 def extract_text_replies(text):
-    return [reply for reply in Pepper().reply(test_message(text))]
+    pepper_reply = Pepper().reply(test_message(text))
+    return ([reply for reply in pepper_reply.replies], pepper_reply.specialist_name)
 
 
 @app.route("/preview", methods=["GET"])
@@ -32,9 +33,10 @@ def preview_test():
     Custom pepper query UI to make it easier to test the pepper
     """
     message = request.args.get("message") or ""
-    replies = extract_text_replies(message)
+    replies, specialist_name = extract_text_replies(message)
     return render_template(
         "preview.html",
+        specialist_name=specialist_name,
         message=message,
         reply="\n".join([r.text for r in replies]),
         json=json.dumps([r.build_message() for r in replies], indent=2),
@@ -60,11 +62,12 @@ def test_suite():
     responses = [
         {
             "message": test_cases[index],
+            "specialist_name": specialist_name,
             "reply": " ".join([r.text for r in rs]),
             "json": json.dumps([r.build_message() for r in rs], indent=2),
             "view": {"class": "odd" if index % 2 else "even"},
         }
-        for index, rs in enumerate(replies)
+        for index, (rs, specialist_name) in enumerate(replies)
     ]
     return render_template("test_suite.html", responses=responses)
 
@@ -78,8 +81,8 @@ def handle_message():
     messenger_parser = MessengerRequestParser()
     message = messenger_parser.get_message(request.get_json())
     try:
-        replies = Pepper().reply(message)
-        send_replies(replies)
+        pepper_reply = Pepper().reply(message)
+        send_replies(pepper_reply.replies)
     except:
         if debug:
             raise sys.exc_info()[1]

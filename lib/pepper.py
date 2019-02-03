@@ -4,6 +4,16 @@ from lib.specialists.quotes import QuoteSpecialist
 from lib.specialists.wordsbyanji import WordsByAnjiSpecialist, PepperEnglishSpecialist
 
 
+class PepperReply:
+    """
+    Detailed replies from the pepper
+    """
+
+    def __init__(self, specialist_name, replies):
+        self.specialist_name = specialist_name
+        self.replies = replies
+
+
 class Pepper:
     def reply(self, message):
         """
@@ -21,5 +31,7 @@ class Pepper:
 
         for s in specialists:
             if s.understands(message):
-                return s.reply(message)
+                return PepperReply(
+                    specialist_name=type(s).__name__, replies=s.reply(message)
+                )
         return []
