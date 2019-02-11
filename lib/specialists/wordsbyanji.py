@@ -41,7 +41,7 @@ def get_quotes():
 def get_placeholder_reply(sender_id):
     return ImageWithTitleReply(
         sender_id=sender_id,
-        image_url="https://andreq.me/words-by-anji/piyomaru.png",
+        image_url="https://andreq.me/images/piyomaru_pepper_talk.png",
         title="Words from Anji",
         subtitle="Wise as a pepper",
     )
@@ -65,7 +65,7 @@ class WordsByAnjiSpecialist(PepperSpecialist):
         return [
             ImageWithTitleReply(
                 sender_id=message.sender_id,
-                image_url="https://andreq.me/words-by-anji/piyomaru.png",
+                image_url="https://andreq.me/images/piyomaru_pepper_talk.png",
                 title=q["data"]["context"],
                 subtitle=q["data"]["word"],
             )
@@ -91,13 +91,13 @@ class PepperEnglishSpecialist(PepperSpecialist):
             ImageListReply(
                 sender_id=message.sender_id,
                 header=ImageListElement(
-                    image_url="https://andreq.me/words-by-anji/piyomaru.png",
+                    image_url="https://andreq.me/images/piyomaru_pepper_talk.png",
                     title=q["data"]["word"],
                     subtitle=q["data"]["definition"],
                 ),
                 children=[
                     ImageListElement(
-                        image_url="https://andreq.me/words-by-anji/anjicon.ico",
+                        image_url="https://andreq.me/images/anji_sqr.jpg",
                         title=q["data"]["context"],
                         subtitle=q["data"]["spelling"],
                     )
