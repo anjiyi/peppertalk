@@ -1,0 +1,22 @@
+{% macro render_preview(replies) %}
+	{% for r in replies %}
+		{% if r.attachment is defined %}
+			{{render_placeholder(r)}}
+		{% elif r.text is defined %}
+			{{render_text(r)}}
+		{% else %}
+			{{render_placeholder(r)}}
+		{% endif %}
+	{% endfor %}
+{% endmacro %}
+
+{% macro render_placeholder(reply) %}
+	<div class="alert alert-danger" role="alert">
+		Preview not implemented, fallback to JSON preview
+	</div>
+	<pre>{{reply | json_stringify}}</pre>
+{% endmacro %}
+
+{% macro render_text(reply) %}
+	{{reply.text}}	
+{% endmacro %}
