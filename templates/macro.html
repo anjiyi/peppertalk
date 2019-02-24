@@ -18,5 +18,15 @@
 {% endmacro %}
 
 {% macro render_text(reply) %}
-	{{reply.text}}	
+	<div style="
+    font-family: Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+		color: white; 
+		background-color: #09f;
+		padding: 6px 12px 7px;
+		line-height: 1.28;
+		border-radius: 1.3em;
+		margin-bottom: 2px;
+		"> 
+		{{reply.text}}
+	</div>
 {% endmacro %}

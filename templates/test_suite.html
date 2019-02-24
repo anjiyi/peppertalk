@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
+{% from 'macro.html' import render_preview %}
 
-{% macro render_test_preview(response) -%}
+{% macro render_test_preview(response, hash) -%}
 	<div class="col-lg-4">
 		<div class="card answer">
 			<div class="card-header">
-				<p>
-					{{response.specialist_name}}: {{response.message}}
-				</p>
+				<div>
+					<a 
+						class="btn btn-primary"
+						href="#{{hash}}"
+						data-toggle="collapse"
+						role="button"
+						aria-expanded="false"
+						aria-controls="{{hash}}">
+						JSON
+					</a>
+					{{response.specialist_name}}
+				</div>
+				<div>
+					{{response.message}}
+				</div>
 			</div>
-			<div class="card-body">
-				R: {{response.reply}}
-			</div>
-			<div class="card-body">
+			<div class="card-body collapse" id="{{hash}}">
 				<pre>{{response.json | json_stringify}}</pre>
+			</div>
+			<div class="card-body">
+				{{render_preview(response.json)}}
 			</div>
 		</div>
 	</div>
@@ -22,7 +35,7 @@
 {% block content %}
 	<div class="row">
 		{%- for response in responses %}
-			{{render_test_preview(response)}}
+			{{render_test_preview(response, response.message | get_hash)}}
 		{%- endfor %}
 	</div>
 {% endblock %}

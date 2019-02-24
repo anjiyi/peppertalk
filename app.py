@@ -39,7 +39,7 @@ def preview_test():
         specialist_name=specialist_name,
         message=message,
         reply="\n".join([r.text for r in replies]),
-        json=json.dumps([r.build_message() for r in replies], indent=2),
+        json=[r.build_message() for r in replies],
     )
 
 
@@ -55,7 +55,8 @@ def test_suite():
         "Are you a pepper?",
         "",
         "Do me a Big\n favor",
-        "[1231231:12312]",
+        "be wise",
+        "teach me a word",
         "\N{grinning face with smiling eyes}",
     ]
     replies = [extract_text_replies(t) for t in test_cases]
@@ -64,12 +65,22 @@ def test_suite():
             "message": test_cases[index],
             "specialist_name": specialist_name,
             "reply": " ".join([r.text for r in rs]),
-            "json": json.dumps([r.build_message() for r in rs], indent=2),
+            "json": [r.build_message() for r in rs],
             "view": {"class": "odd" if index % 2 else "even"},
         }
         for index, (rs, specialist_name) in enumerate(replies)
     ]
     return render_template("test_suite.html", responses=responses)
+
+
+@app.template_filter("get_hash")
+def get_hash(data):
+    return "id" + str(hash(data))
+
+
+@app.template_filter("json_stringify")
+def json_stringify(blob):
+    return json.dumps(blob, indent=2)
 
 
 @app.route("/peppertalk", methods=["POST"])
@@ -83,7 +94,7 @@ def handle_message():
     try:
         pepper_reply = Pepper().reply(message)
         send_replies(pepper_reply.replies)
-    except:
+    except Exception:
         if debug:
             raise sys.exc_info()[1]
         print(sys.exc_info())
